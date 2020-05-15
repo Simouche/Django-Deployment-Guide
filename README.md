@@ -168,45 +168,109 @@ Your app is running ok by going to your_ip_address:80001
 if everything is ok go to the next step, otherwise check if you did eveyrhing good.
    
 # Configure Gunicorn:
-  // for more details about gunicorn check https://gunicorn.org/.
-  // install gunicorn in our virtual environement
-      - pip install gunicorn
-  // configure the gunicorn_start file to run our django app:
-      - cd venv/bin
-      - touch gunicorn_start
-      - copy the content of gunicorn_start.txt file and make the appropriate changes according to your project
-  // make the gunicorn_start file executable:
-      - chmod u+x gunicorn_start
-  // create the gunicorn socket folder:
-      - cd ../../.. //change directory to the project folder (not the app folder) one level before manage.py 
-                        inside the "my_application_folder".
-      - mkdir run
- 
-  // that's all for the gunicorn.
+**for more details about gunicorn check https://gunicorn.org/**
+
+* install gunicorn in our virtual environement
+```console
+foo@bar:~$/home/my_application_folder/application/ pip install gunicorn
+```
+
+* configure the gunicorn_start file to run our django app:
+
+```console
+foo@bar:~$/home/my_application_folder/application/ cd venv/bin
+```
+```console
+foo@bar:~$/home/my_application_folder/application/ touch gunicorn_start
+```
+
+copy the content of gunicorn_start.txt file and make the appropriate changes according to your project
+
+* make the gunicorn_start file executable
+
+```console
+foo@bar:~$/home/my_application_folder/application/ chmod u+x gunicorn_start
+```
+
+* create the gunicorn socket folder:
+
+```console
+foo@bar:~$/home/my_application_folder/application/ cd ../../
+```
+
+change directory to the project folder (not the app folder) one **level before manage.py**  inside the "my_application_folder".
+
+```console
+foo@bar:~$/home/my_application_folder/ mkdir run
+```
+
+that's all for the gunicorn.
   
 # Configure Supervisor:
-  // supervisor will be used to run your gunicorn server as a daemon (service), and keep your application up and running even
-      after server crash or restart.
-  // change directory to supervisor configurations folder (this folder holds all the configurations for any daemon program):
-      - cd /etc/supervisor/conf.d/
-      - touch anyname.conf //change the name as you want (your project name).
-      - nano anyname.conf // copy the content of supervisor_config.txt and make the necessary changes according to your project.
-      - cd /home/project/my_application_folder/
-      - mkdir logs
-      - cd logs
-      - touch gunicorn-error.log
-      - touch gunicorn-out.log
+
+supervisor will be used to run your gunicorn server as a daemon (service), and keep your application up and running even after server crash or restart.
+
+* change directory to supervisor configurations folder (this folder holds all the configurations for any daemon program):
+
+```console
+foo@bar:~$/home/my_application_folder/ cd /etc/supervisor/conf.d/
+```
+
+```console
+foo@bar:~$/home/my_application_folder/etc/supervisor/conf.d/ touch anyname.conf
+```
+change the **anyname** as you want (your project name).
+
+```console
+foo@bar:~$/home/my_application_folder/etc/supervisor/conf.d/ nano anyname.conf
+```
+copy the content of supervisor_config.txt and make the necessary changes according to your project.
+
+```console
+foo@bar:~$/home/my_application_folder/etc/supervisor/conf.d/ cd /home/project my_application_folder/
+```
+```console
+foo@bar:~$/home/my_application_folder/ mkdir logs
+```
+```console
+foo@bar:~$/home/my_application_folder/ cd logs
+```
+```console
+foo@bar:~$/home/my_application_folder/logs touch gunicorn-error.log
+```
+```console
+foo@bar:~$/home/my_application_folder/logs touch gunicorn-out.log
+```
+
       
-  // now you'll have to enable and start the supervisor service:
-      - systemctl enable supervisor
-      - systemctl start supervisor
-  // now reread new scripts and update the supervisor registery:
-      - supervisorctl reread
-      - supervisorctl update
-  // now you should see that your program name appearing and supervisor will tell you that it is added.
-  // you can check your program status by:
-      - sudo supervisorctl status program_name // you should see the programe name and "RUNNING" next to it with pid and uptime.
-  // now your app is up and running on the gunicorn, but it can't be accessed from outside over http, that's where nginx comes.
+* now you'll have to enable and start the supervisor service:
+  
+```console
+foo@bar:~$/home/my_application_folder/logs systemctl enable supervisor
+```
+
+```console
+foo@bar:~$/home/my_application_folder/logs systemctl start supervisor
+```
+
+* now reread new scripts and update the supervisor registery:
+
+```console
+foo@bar:~$/home/my_application_folder/logs supervisorctl reread
+```
+```console
+foo@bar:~$/home/my_application_folder/logs supervisorctl update
+```
+* now you should see that your program name appearing and supervisor will tell you that it is added.
+
+* you can check your program status by:
+```console
+foo@bar:~$/home/my_application_folder/logs sudo supervisorctl status program_name
+```
+
+you should see the programe name and **"RUNNING"** next to it with pid and uptime.
+
+now your app is up and running on the gunicorn, but it can't be accessed from outside over http, that's where nginx comes.
   
   
 # Configure Nginx:
