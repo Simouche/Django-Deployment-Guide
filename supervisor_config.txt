@@ -1,0 +1,7 @@
+[program:"program_name"]
+command=/home/my_application_folder/application/venv/bin/gunicorn_start
+user=root
+autostart=true
+autorestart=true
+redirect_stderr=true
+stdout_logfile=/home/my_application_folder/logs/gunicorn-error.log

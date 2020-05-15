@@ -1,0 +1,35 @@
+upstream app_server{
+	server unix:/home/my_application_folder/run/gunicorn.sock/ fail_timeout=5;
+}
+
+server {
+		listen 80; //or any other port
+		server_name server_ip/domain_name;
+
+		keepalive_timeout 5;
+		client_max_body_size 4G;
+
+		access_log /home/my_application_folder/logs/nginx-access.log;
+		error_log /home/my_application_folder/logs/nginx-error.log;
+
+		location /static/ {
+			alias /home/my_application_folder/application/static_root/;
+		}
+
+		 // this is for the uploads/media files
+		location /uploads/ {  //the location should be the same as your settings.py media url
+			autoindex on;
+			alias /home/my_application_folder/logs/media_root;
+		}
+
+		location / {
+			try_files $uri @proxy_to_app;
+		}
+
+		location @proxy_to_app {
+			proxy_set_header X-Forwarded-For @proxy_add_x_forwarded_for;
+			proxy_set_header Host $http_host;
+			proxy_redirect off;
+			proxy_pass http://app_server;
+		}
+}

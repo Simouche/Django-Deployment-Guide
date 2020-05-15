@@ -1,0 +1,23 @@
+#!/bin/bash
+
+NAME="a name"
+DIR=/home/my_application_folder/application
+USER=root
+GROUP=root
+WORKERS=10
+BIND=unix:/home/my_application_folder/run/gunicorn.sock
+DJANGO_SETTINGS_MODULE=projectname.settings
+DJANGO_WSGI_MODULE=projectname.wsgi
+LOG_LEVEL=error
+
+cd $DIR
+source venv/bin/activate
+
+exec venv/bin/gunicorn ${DJANGO_WSGI_MODULE}:application \
+	  --name $NAME\
+	  --workers $WORKERS\
+	  --user=$USER\
+	  --group=$GROUP\
+	  --bind=$BIND\
+	  --log-level=$LOG_LEVEL\
+	  --log-file=-
