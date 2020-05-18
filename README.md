@@ -274,10 +274,10 @@ now your app is up and running on the gunicorn, but it can't be accessed from ou
   
   
 # Configure Nginx:
-  // nginx will be used as a proxy server to redirect the http requests to gunicorn server, and also serve the media and static files,
+nginx will be used as a proxy server to redirect the http requests to gunicorn server, and also serve the media and static files,
       for bigger apps you should consider making a different server to serve the media files.
   
-  // create the site config file:
+   * create the site config file:
       - cd /etc/nginx/sites-available/
       - touch project_name (or any name you want)
       - nano project_name // copy the content of nginx_config.txt and make the necessary changes according to your project.
