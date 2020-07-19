@@ -1,10 +1,11 @@
 # Django-Deployment-Guide
 A simple guide for a quick django app deployment on any linux vps.
 
-# Login To Your Server Over SSH:
+# Steps:
+## Login To Your Server Over SSH:
   This part is skipped because it doesn't belong to this context.
 
-# Install Server Dependencies
+## Install Server Dependencies
 
 * Get the latest updates of the system packages.
 
@@ -56,7 +57,7 @@ foo@bar:~$ apt-get install python3.7-dev libmysqlclient-dev
 foo@bar:~$ apt install build-essential
 ```
    
-# Configure The Project Environment:
+## Configure The Project Environment:
 
 * You should create a new system user with root privileges if you don't want to work with the root user, in my case i'm just going to use root.
   
@@ -167,7 +168,7 @@ Your app is running ok by going to your_ip_address:80001
      
 if everything is ok go to the next step, otherwise check if you did eveyrhing good.
    
-# Configure Gunicorn:
+## Configure Gunicorn:
 **for more details about gunicorn check https://gunicorn.org/**
 
 * install gunicorn in our virtual environement
@@ -206,7 +207,7 @@ foo@bar:~$/home/my_application_folder/ mkdir run
 
 that's all for the gunicorn.
   
-# Configure Supervisor:
+## Configure Supervisor:
 
 supervisor will be used to run your gunicorn server as a daemon (service), and keep your application up and running even after server crash or restart.
 
@@ -265,7 +266,7 @@ foo@bar:~$/home/my_application_folder/logs supervisorctl update
 
 * you can check your program status by:
 ```console
-foo@bar:~$/home/my_application_folder/logs sudo supervisorctl status program_name
+foo@bar:~/home/my_application_folder/logs$ sudo supervisorctl status program_name
 ```
 
 you should see the programe name and **"RUNNING"** next to it with pid and uptime.
@@ -273,34 +274,40 @@ you should see the programe name and **"RUNNING"** next to it with pid and uptim
 now your app is up and running on the gunicorn, but it can't be accessed from outside over http, that's where nginx comes.
   
   
-# Configure Nginx:
+## Configure Nginx:
 nginx will be used as a proxy server to redirect the http requests to gunicorn server, and also serve the media and static files,
       for bigger apps you should consider making a different server to serve the media files.
   
    * create the site config file:
-      - cd /etc/nginx/sites-available/
-      - touch project_name (or any name you want)
-      - nano project_name // copy the content of nginx_config.txt and make the necessary changes according to your project.
-      - cd /home/my_application_folder/logs/ //go to the project folder and make the nginx logs files
-      - touch nginx-access.log
-      - touch nginx-error.log
-  
-  // create a symbolic link to enable the website.
-      - sudo ln -s /etc/nginx/sites-available/config_file_name /etc/nginx/sites-enabled/config_file_name 
-  
-  // delete the nginx default website:
-      - rm /etc/nginx/sites-enabled/default
-  
-  // restart the nginx server service:
-      - service nginx restart
-  // now if you go to your domain name you can access your application, but you'll notice that the static files are missing,
-      no css,js...
-  // that because we didn't collect the static files into the static_root folder, so:
-      - cd /application
-      - python manage.py collectstatic
-      
-  // check your website now, it should be up and running perfectly.
-  // note that if you make any changes to your code, you'll have to restart the supervisor daemon only:
-      - supervisorctl restart program_name
-  
-  // done.
+   ```console
+   foo@bar:~$ cd /etc/nginx/sites-available/
+   foo@bar:~/etc/nginx/sites-available/$ touch project_name (or any name you want)
+   foo@bar:~/etc/nginx/sites-available/$ nano project_name (copy the content of nginx_config.txt and make the necessary changes according to your project)
+   foo@bar:~/etc/nginx/sites-available/$ cd /home/my_application_folder/logs/ (go to the project folder and make the nginx logs files)
+   foo@bar:~/home/my_application_folder/logs/$ touch nginx-access.log
+   foo@bar:~/home/my_application_folder/logs/$ touch nginx-error.log
+   ```
+  * create a symbolic link to enable the website.
+  ```console
+      foo@bar:~/home/my_application_folder/logs/$ sudo ln -s /etc/nginx/sites-available/config_file_name /etc/nginx/sites-enabled/config_file_name 
+  ```
+  * delete the nginx default website:
+  ```console
+      foo@bar:~/home/my_application_folder/logs/$ rm /etc/nginx/sites-enabled/default
+  ```  
+  * restart the nginx server service:
+  ```console
+      foo@bar:~/home/my_application_folder/logs/$ service nginx restart
+  ```  
+  now if you go to your domain name you can access your application, but you'll notice that the static files are missing,no css,js...
+  *that because we didn't collect the static files into the static_root folder, so:
+      * change directory to your application, same level as manage.py
+      ```console
+      foo@bar:~/path/to/app/$ python manage.py collectstatic
+      ```       
+  check your website now, it should be up and running perfectly.
+  note that if you make any changes to your code, you'll have to restart the supervisor daemon only:
+  ```console
+      foo@bar:~$ supervisorctl restart program_name
+  ```    
+ # done.
