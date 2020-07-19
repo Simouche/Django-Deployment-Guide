@@ -310,4 +310,4 @@ nginx will be used as a proxy server to redirect the http requests to gunicorn s
   ```console
       foo@bar:~$ supervisorctl restart program_name
   ```    
- # done.
+ # Done.
