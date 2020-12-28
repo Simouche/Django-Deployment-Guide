@@ -40,7 +40,7 @@ foo@bar:~$ sudo apt-get -y install python3.7
 * Install pythoon virtual environment (will be used to isolate our project dependencies)
 
 ```console
-foo@bar:~$ sudo apt-get -y install virtualen
+foo@bar:~$ sudo apt-get -y install virtualenv
 ```
 
 Install any database server your project require, i won't cover this as it is out of context. 
@@ -75,7 +75,7 @@ foo@bar:~$/home/ mkdir my_application_folder
 foo@bar:~$/home/ cd my_application_folder
 ```
 
-* now inside your application folder, pull your code from your repository (github or private):
+* now inside your application folder, pull your code from your repository (github or private server):
 
 ```console
 foo@bar:~$/home/my_application_folder git clone https://server.address/your/repo/path
@@ -164,7 +164,7 @@ foo@bar:~$/home/my_application_folder/application/ python manage.py check --depl
 foo@bar:~$/home/my_application_folder/application/ python manage.py runserver 0.0.0.0:8001
 ```
 
-Your app is running ok by going to your_ip_address:80001
+You can check if your app is running ok by going to your_ip_address:80001
      
 if everything is ok go to the next step, otherwise check if you did eveyrhing good.
    
@@ -182,7 +182,7 @@ foo@bar:~$/home/my_application_folder/application/ pip install gunicorn
 foo@bar:~$/home/my_application_folder/application/ cd venv/bin
 ```
 ```console
-foo@bar:~$/home/my_application_folder/application/ touch gunicorn_start
+foo@bar:~$/home/my_application_folder/application/venv/bin/ touch gunicorn_start
 ```
 
 copy the content of gunicorn_start.txt file and make the appropriate changes according to your project
@@ -190,13 +190,13 @@ copy the content of gunicorn_start.txt file and make the appropriate changes acc
 * make the gunicorn_start file executable
 
 ```console
-foo@bar:~$/home/my_application_folder/application/ chmod u+x gunicorn_start
+foo@bar:~$/home/my_application_folder/application/venv/bin/ chmod u+x gunicorn_start
 ```
 
 * create the gunicorn socket folder:
 
 ```console
-foo@bar:~$/home/my_application_folder/application/ cd ../../
+foo@bar:~$/home/my_application_folder/application/venv/bin/ cd ../../../
 ```
 
 change directory to the project folder (not the app folder) one **level before manage.py**  inside the "my_application_folder".
