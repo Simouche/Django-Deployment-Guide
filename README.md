@@ -91,7 +91,7 @@ foo@bar:~$/home/my_application_folder cd application
 
 ```
 application/
-└── manager.py
+└── manage.py
 ```
 ```console
 foo@bar:~$/home/my_application_folder/application/ virtualenv --python=python3.7 venv
